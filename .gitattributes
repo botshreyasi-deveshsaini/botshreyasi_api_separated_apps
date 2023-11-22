@@ -1,0 +1,4 @@
+RESUME_PARSER/MODEL/model-best/transformer/model filter=lfs diff=lfs merge=lfs -text
+RESUME_PARSER/MODEL/model-last/transformer/model filter=lfs diff=lfs merge=lfs -text
+RESUME_PARSERCHANNELS/MODEL/model-last/transformer/model filter=lfs diff=lfs merge=lfs -text
+RESUME_PARSERCHANNELS/MODEL/model-best/transformer/model filter=lfs diff=lfs merge=lfs -text
