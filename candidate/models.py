@@ -151,4 +151,4 @@ class CandidateNotes(models.Model):
     is_deleted = models.BooleanField(default=False)
     class Meta:
         managed = True
-        db_table = 'candidate_notes'    
+        db_table = 'candidate_notes'

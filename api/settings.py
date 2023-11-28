@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'rolepermission',
     'candidate',
     'smtpdetail',
+    'hiring_manager',
     'history',
     'master',
     'departments',
@@ -198,6 +199,10 @@ DATABASES = {
 
 # DATABASES = {
 #     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     },
+#     'mysqlslave': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }

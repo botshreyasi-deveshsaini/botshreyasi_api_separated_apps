@@ -194,3 +194,119 @@ class CandidateStatusRelations(APIView):
             return Response({'maxid': maxid})
 
         return Response({'error': 'Invalid request method'})
+
+
+# --------------
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+from candidate_status.serializers import CandidateStatusRelationsSerializer, CandidateDetailsSerializer
+from history.models import History
+
+from helper.views import GetAppID
+
+# Create your views here.
+
+
+class CandidateStatus2(APIView):
+
+    def post(self, request, *args, **kwargs):
+
+        print(args, kwargs)
+
+        display_name = request.data.get('display_name')
+        root_name = request.data.get('root_name')
+        is_interview = request.data.get('is_interview')
+        # channel_id = request.data.get('channel_id')
+
+        application_id = GetAppID()
+
+        row = CandidateStatus(display_name=display_name,
+                              root_name=root_name,
+                              is_interview=is_interview,
+                            #   channel_id=channel_id,
+                              application_id=application_id)
+
+        row.save()
+
+        return HttpResponse("200")
+
+    def get(self, request):
+
+        response = CandidateStatus.objects.all().values()
+
+        print(response)
+
+        return Response(response)
+
+
+class CandidateStatusRelations2(APIView):
+
+    def post(self, request):
+        data = request.data.copy()
+
+        print(request.data)
+
+        data['application_id'] = GetAppID()
+
+        serializer = CandidateStatusRelationsSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(status.HTTP_200_OK)
+
+        else:
+            return Response(status.HTTP_400_BAD_REQUEST)
+
+class CandidateDetails(APIView):
+
+    def post(self, request):
+        data = request.data.copy()
+
+        print(data)
+
+
+        # todo-idea: can use switch cases too in ~Python 3.10 versions
+        mandatory_fields = ['first_name', 'last_name', 'mobile_no', 'email',
+                            'gender', 'source', 'application_id', 'user_id',
+                            'job_id', 'client_id', 'campaign_id']
+
+        for i in mandatory_fields:
+            try:
+                data[i]
+            except KeyError:
+                print(i, "missing")
+                return Response(status.HTTP_200_OK)
+
+        data['application_id'] = GetAppID()
+
+        candidateSerializer = CandidateDetailsSerializer(data=data)
+
+        if candidateSerializer.is_valid():
+            candidate = candidateSerializer.save()
+
+            addToJob = AddToJob(candidate=candidate)
+            addToJob.save()
+
+            return Response(status.HTTP_200_OK)
+        else:
+            print(candidateSerializer.errors)
+
+            duplicate_entry_flag = True
+
+        candidate = CandidateDetails.objects.filter(email=data.get('email'))\
+                                            .filter(mobile_no=data.get('mobile_no'))\
+                                            .filter(application=data.get('application'))[0]
+        history = History(candidate=candidate)
+        history.save()
+
+        if duplicate_entry_flag:
+            return Response(data={"Failure": "Duplicate Entry. Try Again"}, status=status.HTTP_200_OK)
+        else:
+            return Response(data={}, status=status.HTTP_200_OK)

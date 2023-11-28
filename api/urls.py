@@ -53,5 +53,8 @@ urlpatterns = [
     # path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(),
     #      name='token_refresh'),    path('', include('tracker.urls')),
     path('dashboard/', include('dashboard.urls')),
-    path('history/', include('history.urls'))
+    path('history/', include('history.urls')),
+
+    path('hiring-manager/', include('hiring_manager.urls')),
+    
 ]

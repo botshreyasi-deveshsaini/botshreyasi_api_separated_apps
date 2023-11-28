@@ -21,6 +21,7 @@ class EmailTemplates(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
     design = models.TextField(null=True,blank=True)
+
     class Meta:
         managed = True
         db_table = 'email_templates'
@@ -52,7 +53,10 @@ class EmailsLogs(models.Model):
     is_update = models.IntegerField(blank=True,null=True)
     campaign_trigger_history = models.ForeignKey(TriggerActionCampaign, on_delete=models.SET_NULL, blank=True,null=True)
     campaign_trigger = models.ForeignKey(ActionTrigger, on_delete=models.SET_NULL, blank=True,null=True)
-    
+
+    # ------
+    is_smtp = models.BooleanField(default=False)
+
     class Meta:
         managed = True
         db_table = 'email_logs'
