@@ -1,8 +1,8 @@
 from django.db import models
 from application.models import Application
 # from message_tempelate.models import MessageTemplates
-# from message_log.models import SmsTemplates
-# from email_log.models import EmailTemplates
+from message_log.models import SmsTemplates
+from email_log.models import EmailTemplates
 # Create your models here.
 
 
@@ -27,14 +27,14 @@ class CandidateStatus(models.Model):
         Application, on_delete=models.CASCADE, default=1)
     referer_status = models.ForeignKey(RefererPaymentStatus, on_delete=models.CASCADE,
                                        blank=False, null=False, related_name='refer_status', default=1)
-    # candidate_email_template = models.ForeignKey(
-    #     EmailTemplates, on_delete=models.CASCADE, blank=True, null=True, related_name='candidate_email_template_id')
-    # candidate_sms_template = models.ForeignKey(
-    #     SmsTemplates, on_delete=models.CASCADE, blank=True, null=True, related_name='candidate_sms_template_id')
-    # referer_email_template = models.ForeignKey(
-    #     EmailTemplates, on_delete=models.CASCADE, blank=True, null=True, related_name='referer_email_template_id')
-    # referer_sms_template = models.ForeignKey(
-    #     SmsTemplates, on_delete=models.CASCADE, blank=True, null=True, related_name='referer_sms_template_id')
+    candidate_email_template = models.ForeignKey(
+        EmailTemplates, on_delete=models.CASCADE, blank=True, null=True, related_name='candidate_email_template_id')
+    candidate_sms_template = models.ForeignKey(
+        SmsTemplates, on_delete=models.CASCADE, blank=True, null=True, related_name='candidate_sms_template_id')
+    referer_email_template = models.ForeignKey(
+        EmailTemplates, on_delete=models.CASCADE, blank=True, null=True, related_name='referer_email_template_id')
+    referer_sms_template = models.ForeignKey(
+        SmsTemplates, on_delete=models.CASCADE, blank=True, null=True, related_name='referer_sms_template_id')
     ip_address = models.CharField(
         blank=False, null=False, max_length=150, default='0.0.0.0')
     created_at = models.DateTimeField(auto_now_add=True)
