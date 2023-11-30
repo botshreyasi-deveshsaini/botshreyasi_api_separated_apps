@@ -69,6 +69,7 @@ class RolePermissions(models.Model):
     class Meta:
         managed = True
         db_table = 'role_permissions'
+        unique_together = ('role', 'permission')
 
     # def save(self, *args, **kwargs):
     #     # Fetch the title based on the ID

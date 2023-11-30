@@ -9,5 +9,9 @@ urlpatterns = [
          path('update-areas/<int:pk>/', views.AreaUpdateView.as_view(), name='Area Update'),
          path('create-permission/', views.PermissionView.as_view(), name='Permission register'),
          path('create-rolepermission/', views.RolePermissionView.as_view(), name='Permission register'),
+         path('create-user-role/', views.RoleRegistrationView.as_view()),
+         path('update-permissions/', views.UpdatePermissions.as_view(), name="Permissions Update"),
+         path('permissions-areas-view/', views.PermissionsAreasView.as_view()),
+         path('role-permissions-permissions-view/', views.RolePermissions_Permissions_View.as_view())
 
 ]

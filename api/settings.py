@@ -101,9 +101,10 @@ MIDDLEWARE = [
 AUTH_USER_MODEL = 'authorization.User'
 CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'api.urls'
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:4200',
-]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:4200',
+#     'http://192.168.3.10:8000',
+# ]
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -281,7 +282,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465  # or the appropriate port for your region
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'devesh.s@botshreyasi.com'
-EMAIL_HOST_PASSWORD = 'Alwar@123'
+EMAIL_HOST_PASSWORD = 'aaaa'
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=180),
