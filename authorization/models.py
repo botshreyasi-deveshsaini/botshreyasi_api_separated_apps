@@ -68,8 +68,12 @@ class User(AbstractBaseUser):
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
     manager = models.IntegerField(blank=True, null=True)
     short_name = models.CharField(null=False, max_length=10)
-    created_at=models.DateTimeField(auto_now_add=True)
-    update_at=models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    login_attempts = models.IntegerField(default=0)
+    forget_password_attempts = models.IntegerField(default=0)
+    account_locked = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username','first_name', 'last_name', 'mobile_no', 'name']

@@ -75,7 +75,8 @@ INSTALLED_APPS = [
     'campaign_trigger',
     'chat',
     'url_shortner',
-    'interview'
+    'interview',
+    'activity_log',
 
 ]
 

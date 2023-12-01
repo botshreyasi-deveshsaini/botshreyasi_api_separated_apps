@@ -190,8 +190,6 @@ class PermissionView(APIView):
 
     data = request.data.copy()
 
-    
-
     # Validators
     # Validation using idValidator for areas removed.
     

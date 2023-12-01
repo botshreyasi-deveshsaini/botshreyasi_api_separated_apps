@@ -51,8 +51,8 @@ class EmailsLogs(models.Model):
     is_deleted = models.BooleanField(default=False)
     sender_name = models.CharField(db_column='sender_name', default='Bot Shreyasi', max_length=50, blank=False, null=False)
     is_update = models.IntegerField(blank=True,null=True)
-    campaign_trigger_history = models.ForeignKey(TriggerActionCampaign, on_delete=models.SET_NULL, blank=True,null=True)
-    campaign_trigger = models.ForeignKey(ActionTrigger, on_delete=models.SET_NULL, blank=True,null=True)
+    # campaign_trigger_history = models.ForeignKey(TriggerActionCampaign, on_delete=models.SET_NULL, blank=True,null=True)
+    # campaign_trigger = models.ForeignKey(ActionTrigger, on_delete=models.SET_NULL, blank=True,null=True)
 
     # ------
     is_smtp = models.BooleanField(default=False)

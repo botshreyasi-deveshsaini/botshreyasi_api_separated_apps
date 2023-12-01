@@ -28,6 +28,11 @@ import secrets
 from base64 import b64encode, b64decode
 
 
+from .models import User
+
+from helper.views import log_activity
+
+
 def get_tokens_for_user(user):
   refresh = RefreshToken.for_user(user)
   return {
@@ -125,14 +130,46 @@ class UserLoginView(APIView):
 #     return JsonResponse({'password': password})
 #    # return JsonResponse({'error': 'invalid_user'}, status=401)
 
+    user_agent = request.META.get('HTTP_USER_AGENT')
+    ip_address = request.META.get('REMOTE_ADDR')
 
-
+    activity_log_data = dict()
+    activity_log_data['email'] = email
+    activity_log_data['password'] = password
+    activity_log_data['user_agent'] = user_agent
+    activity_log_data['ip_address'] = ip_address
 
     user = authenticate(email=email, password=password)
     if user is not None:
       token = get_tokens_for_user(user)
+
+      # Reset all attempts
+      user.login_attempts = 0
+      user.forget_password_attempts = 0
+      user.otp_entry_attempts = 0
+      user.save()
+
+      # -- Activity Logging --
+      activity_log_data['is_successful'] = True
+      log_activity(data=activity_log_data)
+      # -- Activity Logging --
+
       return Response({'token':token, 'msg':'Login Success'}, status=status.HTTP_200_OK)
     else:
+
+      try:
+        attemptedUser = User.objects.filter(email=email).first()
+        attemptedUser.login_attempt += 1
+        attemptedUser.save()
+
+      except:
+        pass
+
+      # -- Activity Logging --
+      activity_log_data['is_successful'] = False
+      log_activity(data=activity_log_data)
+      # -- Activity Logging --
+
       return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}}, status=status.HTTP_404_NOT_FOUND)
 
 
@@ -153,19 +190,61 @@ class UserChangePasswordView(APIView):
     return Response({'msg':'Password Changed Successfully'}, status=status.HTTP_200_OK)
 
 class SendPasswordResetEmailView(APIView):
+
+  # Implementation of this serializer has responsibility not meant for this serializer
+  # Need to rethink implementation
+
   renderer_classes = [UserRenderer]
   def post(self, request, format=None):
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    user = User.objects.filter(email=request.data['email']).first()
+    user.forget_password_attempts += 1
+    user.save()
+    
     serializer = SendPasswordResetEmailSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
+
+    # email = serializer.validated_data.get('email')  # Can we use this code ?
+    email = serializer.data.get('email')
+
+
+    # -- activity logging --
+    activity_log_data = dict()
+    activity_log_data['email'] = email
+    # activity_log_data['attempt_name'] = <automatically retrieve class name>
+    activity_log_data['attempt_name'] = "Reset Password Attempt"
+    log_activity(activity_log_data)
+    # -- activity logging --
+
+    # Due to the implementation of token generation, we're doing it before token generation
+    # user = User.objects.filter(email=email).first()
+    # user.forget_password_attempts += 1
+    # user.save()
+
     return Response({'msg':'Password Reset link send. Please check your Email'}, status=status.HTTP_200_OK)
 
 class UserPasswordResetView(APIView):
   renderer_classes = [UserRenderer]
   def post(self, request, uid, token, format=None):
+
+    activity_log_data = dict()
+
     serializer = UserPasswordResetSerializer(data=request.data, context={'uid':uid, 'token':token})
     serializer.is_valid(raise_exception=True)
+
+    activity_log_data['attempt_name'] = "Password Reset Successful"
+
+    from django.utils.encoding import smart_str
+    from django.utils.http import urlsafe_base64_decode
+
+    id = smart_str(urlsafe_base64_decode(uid))
+
+    activity_log_data['email'] = User.objects.filter(id=id).values().first()['email']
+    log_activity(data=activity_log_data)
+
     return Response({'msg':'Password Reset Successfully'}, status=status.HTTP_200_OK)
-  
+
 class GenerateKeyPairWithSaltView(APIView):
     # def get(self, request):
     #     # Generate the RSA key pair with a 32-byte random salt

@@ -19,6 +19,16 @@ import random
 import secrets
 from django.contrib.sites.models import Site
 
+from activity_log.serializers import ActivityLogSerializer
+
+
+def log_activity(data=dict()):
+
+    activityLogSerializer = ActivityLogSerializer(data=data)
+    if activityLogSerializer.is_valid():
+        activityLogSerializer.save()
+    else:
+        print("WARNING: ", activityLogSerializer.errors)
 
 def getUser():
     user = vars(get_current_authenticated_user())
