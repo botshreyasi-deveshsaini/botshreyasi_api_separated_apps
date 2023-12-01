@@ -261,17 +261,16 @@ class UpdatePermissions(APIView):
     print(role_id)
     # Validators
     # if not idValidator(role_id):
-    #   return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": "invalid role_id"}) 
+    #   return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": "invalid role_id"})
     # print(len(request.POST.getlist('permissions')))
-    permissions = []
+    permission_ids = []
     for key, value in request.POST.items():
             if key.startswith('permissions[') and key.endswith(']'):
-                permissions.append(int(value))
-    print(permissions)
-    permission_ids = [int(request.POST.get(f'permissions[{i}]')) for i in range(len(request.POST.getlist('permissions')))]#request.POST.getlist('permissions')
+                permission_ids.append(int(value))
+
+    # permission_ids = [int(request.POST.get(f'permissions[{i}]')) for i in range(len(request.POST.getlist('permissions')))]#request.POST.getlist('permissions')
     # permission_ids = request.data.get('permissions[0]')
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    print(permission_ids)
+    # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", permissions)
     # if type(permission_ids) is list:
 
     #   for permission_id in permission_ids:
