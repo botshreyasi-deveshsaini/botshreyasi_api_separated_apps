@@ -56,5 +56,6 @@ urlpatterns = [
     path('history/', include('history.urls')),
 
     path('hiring-manager/', include('hiring_manager.urls')),
+    path('permissions/', include('rolepermission.urls')),
     
 ]

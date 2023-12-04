@@ -14,13 +14,14 @@ class DepartmentListCreateView(APIView):
     def get(self, request):
         print("-----------------")
         application_id = GetAppID()
-        isclientdepartment  = request.GET.get('isclientdepartment')
+        isclientdepartment  = "department"
         application_departments = Department.objects.filter(application_id=application_id,client_or_department=isclientdepartment, is_deleted=False).values()
         print(application_departments)
         return Response(application_departments)
-    
+
     def post(self, request):
         queryset = Department.objects.all()
+        print(queryset.values())
         application_id = GetAppID()
         user_id = GetUserID()
         ip_address = request.META.get('REMOTE_ADDR')
@@ -31,10 +32,13 @@ class DepartmentListCreateView(APIView):
         print(ip_address)
         serializer = DepartmentSerializer(data=mutable_data)
         if serializer.is_valid():
+            print("aaaaaaaa")
             department = serializer.save()
             print(mutable_data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BED_REQUEST)
+
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

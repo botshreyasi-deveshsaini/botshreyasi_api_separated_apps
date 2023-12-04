@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Areas,Permissions,RolePermissions
+from .models import Areas, Permissions, UserRoles, RolePermissions
 
 class AreaRegistrationSerializer(serializers.ModelSerializer):
   # We are writing this becoz we need confirm password field in our Registratin Request
@@ -19,3 +19,9 @@ class RolePermissionSerializer(serializers.ModelSerializer):
   class Meta:
     model = RolePermissions
     fields = '__all__'   
+
+class UserRolesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserRoles
+        fields = "__all__"

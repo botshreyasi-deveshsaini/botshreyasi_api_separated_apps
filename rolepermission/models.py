@@ -27,7 +27,7 @@ class Areas(models.Model):
 class Permissions(models.Model):
     areas = models.ForeignKey(Areas, on_delete=models.CASCADE)
     permission = models.CharField(max_length=250, blank=True, null=True)
-    slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    slug = models.CharField(unique=False, max_length=255, blank=True, null=True)
     permission_name = models.CharField(max_length=255, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     ip_address = models.CharField(db_column='ip_address', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -37,6 +37,7 @@ class Permissions(models.Model):
     class Meta:
         managed = True
         db_table = 'permissions'
+        unique_together = ('slug', 'areas_id')
 
     def save(self, *args, **kwargs):
         # Generate a slug from the title when saving the object
@@ -69,6 +70,7 @@ class RolePermissions(models.Model):
     class Meta:
         managed = True
         db_table = 'role_permissions'
+        unique_together = ('role', 'permission')
 
     # def save(self, *args, **kwargs):
     #     # Fetch the title based on the ID
