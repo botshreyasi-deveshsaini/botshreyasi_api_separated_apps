@@ -2,3 +2,5 @@ RESUME_PARSER/MODEL/model-best/transformer/model
 RESUME_PARSER/MODEL/model-last/transformer/model
 RESUME_PARSERCHANNELS/MODEL/model-best/transformer/model
 RESUME_PARSERCHANNELS/MODEL/model-last/transformer/model
+todolist.txt
+*.pyc
