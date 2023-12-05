@@ -42,6 +42,35 @@ class CandidateStatusRelations(APIView):
             status = request.POST.get('status')
             noemail = int(request.GET.get('noemail', 0))
 
+            from datetime import datetime
+            import os
+
+            ATTACHMENTS_FOLDER = "ATTACHMENTS/"
+
+            try:
+                os.mkdir(ATTACHMENTS_FOLDER)
+            except FileExistsError:
+                pass
+
+            try:
+                attachment = request.FILES['selectedFile']
+
+                appId = GetAppID()
+                userId = GetUserID()
+
+                newFileName = str(datetime.now()) + str(appId) + str(userId)
+
+                attachmentFullPath = os.path.join(ATTACHMENTS_FOLDER, newFileName)
+
+                with open(attachmentFullPath, 'wb') as f:
+                    f.write(attachment.read())
+                print(attachment)
+
+            except:
+                newFileName = ""
+                pass
+
+
             if not status:
                 return Response({'error': 'Status is required'})
 
@@ -52,7 +81,7 @@ class CandidateStatusRelations(APIView):
             is_interview = '1' if is_interview == True else False
             doj = request.POST.get('doj')
             appid = GetAppID()
-            self = GetUserID()
+            self = GetUserID()  # <- avoid overwriting self
             self_email = User.objects.get(id=self).email
             recruiterid = request.POST.get('recruiterid', 53)
             date = request.POST.get('date', None)
@@ -62,6 +91,7 @@ class CandidateStatusRelations(APIView):
             interviewquestion = request.POST.get('interviewquestion', '')
             interviewer = request.POST.get('Interviewer', '')
             modeofinterview = request.POST.get('modeofinterview', '')
+
             param = [
                 ajid,
                 statusid,
@@ -77,7 +107,8 @@ class CandidateStatusRelations(APIView):
                 modeofinterview,
                 interviewer,
                 '',
-                doj
+                doj,
+                attachmentFullPath
             ]
 
             print(f"param----------->{param}")
@@ -94,6 +125,11 @@ class CandidateStatusRelations(APIView):
             addtojob = AddToJob.objects.using(
                 'mysqlslave').filter(id=ajid).first()
             print(f"Candidate Status------->  {addtojob.id}")
+
+            # AddToJob(attachment=fullPath, attachments_folder=ATTACHMENTS_FOLDER).save()
+
+            candidatestatus.candidate_email_template_id = 1
+            # addtojob.referrer_id = 1
 
             # Send mail
             params = [ajid, int(max_id)]
@@ -153,18 +189,28 @@ class CandidateStatusRelations(APIView):
                         candidate = CandidateDetails.objects.using('mysqlslave').filter(
                             id=addtojob.candidate_id).first()
                         template_obj = EmailTemplates.objects.using('mysqlslave').filter(
-                            id=candidatestatus.candidate_email_template_id)
+                            id=candidatestatus.candidate_email_template_id).first()
                         message = prepare_message(data, template_obj.message)
+                        subject = template_obj.subject
+                        selfObj = User.objects.get(id=self)
                         emailparams = {'application_id': appid,
-                                       'added_by': self,
+                                       'added_by': selfObj,
                                        'message': message,
                                        'subject': subject,
                                        'sended_by': template_obj.sended_by,
                                        'sender_name': template_obj.sender_name,
+                                       'sent_date': datetime.now(),
+                                       'is_otp': False,
                                        'sended_to': candidate.email,
                                        'email_template_id': template_obj.id,
                                        'candidate_id': addtojob.candidate_id,
+                                       'attachment': attachmentFullPath,
                                        }
+
+                        from email_log.models import EmailsLogs
+
+                        EmailsLogs(**emailparams).save()
+
                 if candidatestatus.candidate_sms_template_id is not None and candidatestatus.candidate_sms_template_id > 0:
                     print("done sms")
                     if addtojob is not None and addtojob.candidate_id is not None:
@@ -264,7 +310,7 @@ class CandidateStatusRelations2(APIView):
         else:
             return Response(status.HTTP_400_BAD_REQUEST)
 
-class CandidateDetails(APIView):
+class CandidateDetailsView(APIView):
 
     def post(self, request):
         data = request.data.copy()

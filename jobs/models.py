@@ -180,6 +180,8 @@ class AddToJob(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_referred = models.BooleanField(default=False)
+    # attachmentsFolder = models.CharField(max_length=1000, null=True)
+    attachment = models.CharField(max_length=1000, null=True)
     campaign = models.ForeignKey(
         Campaign, on_delete=models.CASCADE, default=1)
     campaign_event = models.ForeignKey(
@@ -225,6 +227,7 @@ class JobCandidateHistory(models.Model):
     status = models.ForeignKey(
         CandidateStatus, on_delete=models.CASCADE, default=1)
     comment = models.TextField(blank=True, null=True)
+    attachment = models.CharField(max_length=1000, null=True)
     is_interview = models.BooleanField(default=False)
     reminder_date = models.DateField(blank=True, null=True)
     ip_address = models.CharField(

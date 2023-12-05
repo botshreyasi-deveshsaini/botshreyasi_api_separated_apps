@@ -35,6 +35,7 @@ class EmailsLogs(models.Model):
     read_at = models.DateTimeField(null=True,blank=True)
     message = models.TextField(blank=False, null=False)
     subject = models.CharField(max_length=500, null=True)
+    # attachments_folder = models.CharField(max_length=1000, blank=True, null=True)
     attachment = models.CharField(max_length=500, blank=True,null=True)
     sended_cc = models.CharField(max_length=500, blank=True,null=True)
     sended_bcc = models.CharField(max_length=500, blank=True,null=True)

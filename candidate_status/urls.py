@@ -7,5 +7,5 @@ urlpatterns = [
 
     path('candidate-status/', views.CandidateStatus2.as_view()),
     path('candidate-status-relations/', views.CandidateStatusRelations2.as_view()),
-    path('candidate-details/', views.CandidateDetails.as_view()),
+    path('candidate-details/', views.CandidateDetailsView.as_view()),
 ]
