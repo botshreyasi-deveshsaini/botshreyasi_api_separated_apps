@@ -1,6 +1,6 @@
 from django.db import models
 
-from application.models import Application
+from botshreyasi_api.application.models import Application
 # from candidate.models import CandidateDetails
 
 # Create your models here.

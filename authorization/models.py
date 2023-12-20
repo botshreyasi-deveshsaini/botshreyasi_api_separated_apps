@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import uuid
 from datetime import datetime, timedelta
-from application.models import Application
+from botshreyasi_api.application.models import Application
 from django.core.validators import RegexValidator
 
 class UserManager(BaseUserManager):
@@ -65,7 +65,8 @@ class User(AbstractBaseUser):
         max_length=150, null=False, unique=True, default='1',validators=[mobile_no_regex],)
     dob = models.DateField(default='2022-08-12')
     # app_id = models.IntegerField(blank=False, null=False, default=0)
-    application = models.ForeignKey(Application, on_delete=models.CASCADE)
+    # application = models.ForeignKey(Application, on_delete=models.CASCADE)
+    application_id = models.IntegerField(default=1)
     manager = models.IntegerField(blank=True, null=True)
     short_name = models.CharField(null=False, max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
