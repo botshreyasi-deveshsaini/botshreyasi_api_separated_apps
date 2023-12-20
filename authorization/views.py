@@ -67,14 +67,17 @@ class UserLoginView(APIView):
     email = serializer.data.get('email')
     print(email)
     encrypted_password = serializer.data.get('password')
-    private_key_pem_tuple = cache.get('private_key')
 
-    user_input_encrypted_password = bytes(b64decode(encrypted_password))
-    privateKey = RSA.import_key(private_key_pem_tuple[0])
-    salt = cache.get('salt')
-    decrypter = PKCS1_OAEP.new(privateKey)
-    user_input_plaintext_password_salted = decrypter.decrypt(user_input_encrypted_password)
-    password = user_input_plaintext_password_salted[:-len(salt)].decode('utf-8')
+    password = encrypted_password
+
+    # private_key_pem_tuple = cache.get('private_key')
+
+    # user_input_encrypted_password = bytes(b64decode(encrypted_password))
+    # privateKey = RSA.import_key(private_key_pem_tuple[0])
+    # salt = cache.get('salt')
+    # decrypter = PKCS1_OAEP.new(privateKey)
+    # user_input_plaintext_password_salted = decrypter.decrypt(user_input_encrypted_password)
+    # password = user_input_plaintext_password_salted[:-len(salt)].decode('utf-8')
 
 
     # print(encrypted_password)

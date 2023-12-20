@@ -1,7 +1,7 @@
 from django.db import models
 
 from application.models import Application
-from candidate.models import CandidateDetails
+# from candidate.models import CandidateDetails
 
 # Create your models here.
 
