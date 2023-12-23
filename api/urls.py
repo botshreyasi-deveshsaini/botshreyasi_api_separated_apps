@@ -18,7 +18,7 @@ from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
 from django.conf.urls import handler404
 
-from application.views import handle_not_found
+from botshreyasi_api.application.views import handle_not_found
 
 urlpatterns = [
     # path('send-email/', include('emailconfig.urls')),

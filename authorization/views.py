@@ -30,7 +30,7 @@ from base64 import b64encode, b64decode
 
 from .models import User
 
-from helper.views import log_activity
+from botshreyasi_api.helper.views import log_activity
 
 
 def get_tokens_for_user(user):

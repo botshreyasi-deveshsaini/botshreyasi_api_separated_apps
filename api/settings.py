@@ -96,7 +96,7 @@ INSTALLED_APPS = [
 
     'authorization',
     'botshreyasi_api.application.apps.ApplicationConfig',
-    'botshreyasi_api.activity_log.apps.ActivityLogConfig',
+    # 'botshreyasi_api.activity_log.apps.ActivityLogConfig',
 
 ]
 
